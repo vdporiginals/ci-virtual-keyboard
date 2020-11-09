@@ -1,20 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'lib-ci-virtual-keyboard',
-  template: `
-    <p>
-      ci-virtual-keyboard works!
-    </p>
-  `,
-  styles: [
-  ]
+  selector: 'ci-virtual-keyboard',
+  template: ` <p>ci-virtual-keyboard works!!!!!!</p> `,
+  styles: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CiVirtualKeyboardComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
