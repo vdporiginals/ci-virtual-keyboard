@@ -2,5 +2,170 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
-  "projects": {}
+  "projects": {
+    "ci-virtual-keyboard": {
+      "projectType": "library",
+      "root": "projects/ci-virtual-keyboard",
+      "sourceRoot": "projects/ci-virtual-keyboard/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ci-virtual-keyboard/tsconfig.lib.json",
+            "project": "projects/ci-virtual-keyboard/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ci-virtual-keyboard/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ci-virtual-keyboard/src/test.ts",
+            "tsConfig": "projects/ci-virtual-keyboard/tsconfig.spec.json",
+            "karmaConfig": "projects/ci-virtual-keyboard/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ci-virtual-keyboard/tsconfig.lib.json",
+              "projects/ci-virtual-keyboard/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "ci-virtual-keyboard-example": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/ci-virtual-keyboard-example",
+      "sourceRoot": "projects/ci-virtual-keyboard-example/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/ci-virtual-keyboard-example",
+            "index": "projects/ci-virtual-keyboard-example/src/index.html",
+            "main": "projects/ci-virtual-keyboard-example/src/main.ts",
+            "polyfills": "projects/ci-virtual-keyboard-example/src/polyfills.ts",
+            "tsConfig": "projects/ci-virtual-keyboard-example/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/ci-virtual-keyboard-example/src/favicon.ico",
+              "projects/ci-virtual-keyboard-example/src/assets"
+            ],
+            "styles": [
+              "projects/ci-virtual-keyboard-example/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/ci-virtual-keyboard-example/src/environments/environment.ts",
+                  "with": "projects/ci-virtual-keyboard-example/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "ci-virtual-keyboard-example:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ci-virtual-keyboard-example:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ci-virtual-keyboard-example:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ci-virtual-keyboard-example/src/test.ts",
+            "polyfills": "projects/ci-virtual-keyboard-example/src/polyfills.ts",
+            "tsConfig": "projects/ci-virtual-keyboard-example/tsconfig.spec.json",
+            "karmaConfig": "projects/ci-virtual-keyboard-example/karma.conf.js",
+            "assets": [
+              "projects/ci-virtual-keyboard-example/src/favicon.ico",
+              "projects/ci-virtual-keyboard-example/src/assets"
+            ],
+            "styles": [
+              "projects/ci-virtual-keyboard-example/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ci-virtual-keyboard-example/tsconfig.app.json",
+              "projects/ci-virtual-keyboard-example/tsconfig.spec.json",
+              "projects/ci-virtual-keyboard-example/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/ci-virtual-keyboard-example/e2e/protractor.conf.js",
+            "devServerTarget": "ci-virtual-keyboard-example:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ci-virtual-keyboard-example:serve:production"
+            }
+          }
+        }
+      }
+    }},
+  "cli": {
+    "analytics": false
+  },
+  "defaultProject": "ci-virtual-keyboard"
 }
