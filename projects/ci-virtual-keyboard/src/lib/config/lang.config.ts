@@ -1,10 +1,23 @@
+import { InjectionToken } from '@angular/core';
 import { KeyboardClassKey } from '../models/keyclass.enum';
+export interface KeyboardLayout {
+  name: string;
+  keys: (string | KeyboardClassKey)[][][];
+  lang?: string[];
+}
 
-export const lang = {
+export interface KeyboardLayouts {
+  [layout: string]: KeyboardLayout;
+}
+
+const CI_KEYBOARD_LAYOUTS = new InjectionToken<KeyboardLayouts>(
+  'keyboard-layouts.config'
+);
+const lang = {
   name: 'Vietnamese',
   keys: [
     [
-      ['`', '~', '`', '~'],
+    //   ['`', '~', '`', '~'],
       ['\u0103', '\u0102', '1', '!'],
       ['\u00E2', '\u00C2', '2', '@'],
       ['\u00EA', '\u00CA', '3', '#'],
@@ -111,3 +124,5 @@ export const lang = {
   ],
   lang: ['vi'],
 };
+
+export { lang, CI_KEYBOARD_LAYOUTS };

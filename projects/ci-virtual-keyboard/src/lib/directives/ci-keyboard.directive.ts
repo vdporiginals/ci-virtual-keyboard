@@ -13,7 +13,7 @@ import { NgControl } from '@angular/forms';
 import { CiKeyboardComponent } from '../components/ci-keyboard/ci-keyboard.component';
 
 import { CiKeyboardRef } from '../event/key-ref';
-import { MatKeyboardService } from '../services/ci-keyboard.service';
+import { CiKeyboardService } from '../services/ci-keyboard.service';
 
 @Directive({
   selector: 'input[ciKeyboard], textarea[ciKeyboard]',
@@ -39,7 +39,7 @@ export class MatKeyboardDirective implements OnDestroy {
 
   constructor(
     private _elementRef: ElementRef,
-    private _keyboardService: MatKeyboardService,
+    private _keyboardService: CiKeyboardService,
     @Optional() @Self() private _control?: NgControl
   ) {}
 

@@ -1,0 +1,25 @@
+<div
+  class="ci-keyboard-wrapper"
+  [class.dark-theme]="darkTheme$ | async"
+  [class.debug]="isDebug$ | async"
+>
+  <nav class="ci-keyboard-layout">
+    <div class="ci-keyboard-row" *ngFor="let row of layout.keys">
+      <ng-container *ngFor="let key of row">
+        <ci-keyboard-key
+          class="ci-keyboard-col"
+          *ngIf="getModifiedKey(key)"
+          [key]="getModifiedKey(key)"
+          [active]="isActive(key)"
+          [input]="inputInstance | async"
+          [control]="control"
+          (enterClick)="onEnterClick()"
+          (capsClick)="onCapsClick()"
+          (altClick)="onAltClick()"
+          (shiftClick)="onShiftClick()"
+          (keyClick)="onKeyClick()"
+        ></ci-keyboard-key>
+      </ng-container>
+    </div>
+  </nav>
+</div>

@@ -9,3 +9,10 @@ export enum KeyboardClassKey {
   Space = ' ',
   Tab = 'Tab',
 }
+
+export enum KeyboardModifier {
+  None,
+  Shift,
+  Alt,
+  ShiftAlt,
+}
