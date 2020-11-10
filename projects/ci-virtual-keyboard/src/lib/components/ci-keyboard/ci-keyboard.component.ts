@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { KeyboardLayout } from '../../config/lang.config';
+import { layoutKeyboard } from '../../config/key.config';
 import { CiKeyboardRef } from '../../event/key-ref';
 import { KeyboardClassKey, KeyboardModifier } from '../../models/keyclass.enum';
 import { CiKeyboardService } from '../../services/ci-keyboard.service';
@@ -24,7 +24,6 @@ import { CiKeyboardKeyComponent } from '../ci-keyboard-key/ci-keyboard-key.compo
   preserveWhitespaces: false,
 })
 export class CiKeyboardComponent implements OnInit {
-  private _darkTheme: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   private _isDebug: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
@@ -42,7 +41,7 @@ export class CiKeyboardComponent implements OnInit {
   // the service provides a locale or layout optionally
   locale?: string;
 
-  layout: KeyboardLayout;
+  layout = layoutKeyboard;
 
   control: AbstractControl;
 
@@ -65,20 +64,10 @@ export class CiKeyboardComponent implements OnInit {
     return this._inputInstance$.asObservable();
   }
 
-  set darkTheme(darkTheme: boolean) {
-    if (this._darkTheme.getValue() !== darkTheme) {
-      this._darkTheme.next(darkTheme);
-    }
-  }
-
   set isDebug(isDebug: boolean) {
     if (this._isDebug.getValue() !== isDebug) {
       this._isDebug.next(isDebug);
     }
-  }
-
-  get darkTheme$(): Observable<boolean> {
-    return this._darkTheme.asObservable();
   }
 
   get isDebug$(): Observable<boolean> {
@@ -87,7 +76,9 @@ export class CiKeyboardComponent implements OnInit {
   private _locale: string = 'vi';
 
   // inject dependencies
-  constructor(private _keyboardService: CiKeyboardService) {}
+  constructor(private _keyboardService: CiKeyboardService) {
+    //   this.attachControl();
+  }
 
   setInputInstance(inputInstance: ElementRef) {
     this._inputInstance$.next(inputInstance);
@@ -99,10 +90,10 @@ export class CiKeyboardComponent implements OnInit {
 
   ngOnInit() {
     // set a fallback using the locale
-    if (!this.layout) {
-      this.locale = this._locale;
-      this.layout = this._keyboardService.getLayoutForLocale(this.locale);
-    }
+    // if (!this.layout) {
+    //   this.locale = this._locale;
+    //   this.layout = this._keyboardService.getLayoutForLocale(this.locale);
+    // }
   }
 
   /**

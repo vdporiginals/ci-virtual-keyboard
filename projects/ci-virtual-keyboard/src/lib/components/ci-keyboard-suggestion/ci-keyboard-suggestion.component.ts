@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'lib-ci-keyboard-suggestion',
+  selector: 'ci-keyboard-suggestion',
   templateUrl: './ci-keyboard-suggestion.component.html',
-  styleUrls: ['./ci-keyboard-suggestion.component.css']
+  styleUrls: ['./ci-keyboard-suggestion.component.scss']
 })
 export class CiKeyboardSuggestionComponent implements OnInit {
 

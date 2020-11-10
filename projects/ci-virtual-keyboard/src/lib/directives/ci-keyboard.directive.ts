@@ -10,6 +10,7 @@ import {
   Self,
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
+import { fromEvent } from 'rxjs';
 import { CiKeyboardComponent } from '../components/ci-keyboard/ci-keyboard.component';
 
 import { CiKeyboardRef } from '../event/key-ref';
@@ -18,10 +19,10 @@ import { CiKeyboardService } from '../services/ci-keyboard.service';
 @Directive({
   selector: 'input[ciKeyboard], textarea[ciKeyboard]',
 })
-export class MatKeyboardDirective implements OnDestroy {
+export class CiKeyboardDirective implements OnDestroy {
   private _keyboardRef: CiKeyboardRef<CiKeyboardComponent>;
 
-  @Input() matKeyboard: string;
+  @Input() ciKeyboard: string;
 
   //   @Input() darkTheme: boolean;
 
@@ -38,18 +39,28 @@ export class MatKeyboardDirective implements OnDestroy {
   @Output() shiftClick: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
+    private element: ElementRef,
     private _elementRef: ElementRef,
     private _keyboardService: CiKeyboardService,
     @Optional() @Self() private _control?: NgControl
-  ) {}
+  ) {
+    fromEvent(element.nativeElement, 'input').subscribe(({ target }) => {
+      console.log(target.value);
+    });
+  }
 
   ngOnDestroy() {
     this.hideKeyboard();
   }
 
+  @HostListener('keyup', ['$event'])
+  public onValueChange(event: KeyboardEvent): void {
+    const value = (event.target as HTMLInputElement).value;
+  }
+
   @HostListener('focus', ['$event'])
   public showKeyboard() {
-    this._keyboardRef = this._keyboardService.open(this.matKeyboard, {
+    this._keyboardRef = this._keyboardService.open(this.ciKeyboard, {
       //   darkTheme: this.darkTheme,
       duration: this.duration,
       isDebug: this.isDebug,
@@ -76,6 +87,8 @@ export class MatKeyboardDirective implements OnDestroy {
 
   @HostListener('blur', ['$event'])
   public hideKeyboard() {
+    console.log(this._keyboardRef);
+
     if (this._keyboardRef) {
       this._keyboardRef.dismiss();
     }

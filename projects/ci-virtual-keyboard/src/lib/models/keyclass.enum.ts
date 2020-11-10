@@ -1,6 +1,6 @@
 export enum KeyboardClassKey {
   Alt = 'Alt',
-  AltGr = 'AltGraph',
+  AltGr = '.?123',
   AltLk = 'AltLk',
   Bksp = 'Backspace',
   Caps = 'CapsLock',

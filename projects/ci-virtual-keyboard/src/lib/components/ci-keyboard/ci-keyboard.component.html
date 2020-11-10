@@ -1,10 +1,7 @@
-<div
-  class="ci-keyboard-wrapper"
-  [class.dark-theme]="darkTheme$ | async"
-  [class.debug]="isDebug$ | async"
->
+<div class="ci-keyboard-wrapper">
   <nav class="ci-keyboard-layout">
-    <div class="ci-keyboard-row" *ngFor="let row of layout.keys">
+    <ci-keyboard-suggestion></ci-keyboard-suggestion>
+    <div class="ci-keyboard-row" *ngFor="let row of layout">
       <ng-container *ngFor="let key of row">
         <ci-keyboard-key
           class="ci-keyboard-col"

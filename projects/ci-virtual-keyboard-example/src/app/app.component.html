@@ -1,1 +1,10 @@
-<ci-virtual-keyboard></ci-virtual-keyboard>
+<input ciKeyboard [(ngModel)]="title" />
+<mat-form-field>
+  <input
+    matInput
+    ciKeyboard
+    placeholder="From detected locale ()"
+    name="sushi"
+    [(ngModel)]="title"
+  />
+</mat-form-field>

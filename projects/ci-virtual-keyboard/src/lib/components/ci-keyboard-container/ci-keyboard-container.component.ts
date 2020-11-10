@@ -1,9 +1,18 @@
 import {
+  animate,
+  AnimationEvent,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import {
   BasePortalOutlet,
   CdkPortalOutlet,
   ComponentPortal,
 } from '@angular/cdk/portal';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ComponentRef,
@@ -12,21 +21,63 @@ import {
   HostListener,
   NgZone,
   OnDestroy,
-  OnInit,
   ViewChild,
 } from '@angular/core';
+import { AnimationCurves, AnimationDurations } from '@angular/material/core';
 import { Observable, Subject } from 'rxjs';
-import { CiKeyboardConfig } from '../../config/keyboard.config';
 import { first } from 'rxjs/operators';
+import { CiKeyboardConfig } from '../../config/keyboard.config';
 
+// TODO: we can't use constants from animation.ts here because you can't use
+// a text interpolation in anything that is analyzed statically with ngc (for AoT compile).
+export const SHOW_ANIMATION = `${AnimationDurations.ENTERING} ${AnimationCurves.DECELERATION_CURVE}`;
+export const HIDE_ANIMATION = `${AnimationDurations.EXITING} ${AnimationCurves.ACCELERATION_CURVE}`;
+
+export enum KeyboardAnimationTransition {
+  Hide = 'visible => hidden',
+  Show = 'void => visible',
+}
+export enum KeyboardAnimationState {
+  Void = 'void',
+  Visible = 'visible',
+  Hidden = 'hidden',
+}
+
+/**
+ * Internal component that wraps user-provided keyboard content.
+ * @docs-private
+ */
 @Component({
-  selector: 'lib-ci-keyboard-container',
+  selector: 'ci-keyboard-container',
   templateUrl: './ci-keyboard-container.component.html',
-  styleUrls: ['./ci-keyboard-container.component.css'],
+  styleUrls: ['./ci-keyboard-container.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  preserveWhitespaces: false,
+  // animations: [
+  //   trigger('state', [
+  //     state('visible', style({transform: 'translateY(0%)'})),
+  //     transition('visible => hidden', animate(HIDE_ANIMATION)),
+  //     transition('void => visible', animate(SHOW_ANIMATION)),
+  //   ])
+  // ]
+  animations: [
+    trigger('state', [
+      state(
+        `${KeyboardAnimationState.Visible}`,
+        style({ transform: 'translateY(0%)' })
+      ),
+      transition(
+        `${KeyboardAnimationTransition.Hide}`,
+        animate(HIDE_ANIMATION)
+      ),
+      transition(
+        `${KeyboardAnimationTransition.Show}`,
+        animate(SHOW_ANIMATION)
+      ),
+    ]),
+  ],
 })
-export class CiKeyboardContainerComponent
-  extends BasePortalOutlet
-  implements OnDestroy {
+export class CiKeyboardContainerComponent extends BasePortalOutlet implements OnDestroy {
   /** Whether the component has been destroyed. */
   private _destroyed = false;
 
@@ -36,7 +87,7 @@ export class CiKeyboardContainerComponent
 
   /** The state of the keyboard animations. */
   @HostBinding('@state')
-  // _animationState: KeyboardAnimationState = KeyboardAnimationState.Void;
+  _animationState: KeyboardAnimationState = KeyboardAnimationState.Void;
 
   /** Subject for notifying that the keyboard has exited from view. */
   onExit: Subject<any> = new Subject();
@@ -80,40 +131,40 @@ export class CiKeyboardContainerComponent
 
   /** Handle end of animations, updating the state of the keyboard. */
   @HostListener('@state.done', ['$event'])
-  // onAnimationEnd(event: AnimationEvent) {
-  //   const { fromState, toState } = event;
+  onAnimationEnd(event: AnimationEvent) {
+    const { fromState, toState } = event;
 
-  //   if (
-  //     (toState === KeyboardAnimationState.Void &&
-  //       fromState !== KeyboardAnimationState.Void) ||
-  //     toState.startsWith('hidden')
-  //   ) {
-  //     this._completeExit();
-  //   }
+    if (
+      (toState === KeyboardAnimationState.Void &&
+        fromState !== KeyboardAnimationState.Void) ||
+      toState.startsWith('hidden')
+    ) {
+      this._completeExit();
+    }
 
-  //   if (toState === KeyboardAnimationState.Visible) {
-  //     // Note: we shouldn't use `this` inside the zone callback,
-  //     // because it can cause a memory leak.
-  //     const onEnter = this.onEnter;
+    if (toState === KeyboardAnimationState.Visible) {
+      // Note: we shouldn't use `this` inside the zone callback,
+      // because it can cause a memory leak.
+      const onEnter = this.onEnter;
 
-  //     this._ngZone.run(() => {
-  //       onEnter.next();
-  //       onEnter.complete();
-  //     });
-  //   }
-  // }
+      this._ngZone.run(() => {
+        onEnter.next();
+        onEnter.complete();
+      });
+    }
+  }
 
   /** Begin animation of keyboard entrance into view. */
   enter() {
     if (!this._destroyed) {
-      // this._animationState = KeyboardAnimationState.Visible;
+      this._animationState = KeyboardAnimationState.Visible;
       this._changeDetectorRef.detectChanges();
     }
   }
 
   /** Begin animation of the snack bar exiting from view. */
   exit(): Observable<void> {
-    // this._animationState = KeyboardAnimationState.Hidden;
+    this._animationState = KeyboardAnimationState.Hidden;
     return this.onExit;
   }
 

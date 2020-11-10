@@ -1,13 +1,16 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
+  Inject,
   Input,
   OnInit,
   Output,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
+import { langArray } from '../../config/lang-array';
 import { KeyboardClassKey } from '../../models/keyclass.enum';
 
 export const VALUE_NEWLINE = '\n\r';
@@ -19,7 +22,9 @@ const REPEAT_INTERVAL = 100;
 @Component({
   selector: 'ci-keyboard-key',
   templateUrl: './ci-keyboard-key.component.html',
-  styleUrls: ['./ci-keyboard-key.component.css'],
+  styleUrls: ['./ci-keyboard-key.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  preserveWhitespaces: false,
 })
 export class CiKeyboardKeyComponent implements OnInit {
   private _deadkeyKeys: string[] = [];
@@ -105,6 +110,9 @@ export class CiKeyboardKeyComponent implements OnInit {
 
   get cssClass(): string {
     const classes = [];
+
+    
+
     if (this.isDeadKey) {
       classes.push('mat-keyboard-key-deadkey');
     }
@@ -139,7 +147,6 @@ export class CiKeyboardKeyComponent implements OnInit {
 
   ngOnInit() {
     // read the deadkeys
-    // this._deadkeyKeys = Object.keys(this._deadkeys);
   }
 
   ngOnDestroy() {
@@ -441,6 +448,14 @@ export class CiKeyboardKeyComponent implements OnInit {
       this.input &&
       this.input.nativeElement &&
       this.input.nativeElement.tagName === 'TEXTAREA'
+    );
+  }
+
+  getIrrelevant() {
+    const arrLang = langArray;
+    this.inputValue.charAt(0);
+    return arrLang.find(
+      (a) => a.startsWith(this.inputValue.charAt(0)) && a.charAt(1) === this.key
     );
   }
 }

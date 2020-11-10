@@ -1,1 +1,14 @@
-<p>ci-keyboard-container works!</p>
+<button
+  class="ci-keyboard-key"
+  tabindex="-1"
+  [class.ci-keyboard-key-active]="active$ | async"
+  [class.ci-keyboard-key-pressed]="pressed$ | async"
+  [disabled]="getIrrelevant()"
+  (click)="onClick($event)"
+  (pointerdown)="onPointerDown()"
+  (pointerleave)="cancelRepeat()"
+  (pointerup)="cancelRepeat()"
+>
+  <div *ngIf="!key; else noIcon">No key provide</div>
+  <ng-template #noIcon>{{ key }}</ng-template>
+</button>
