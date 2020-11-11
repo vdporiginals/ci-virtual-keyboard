@@ -44,9 +44,7 @@ export class CiKeyboardDirective implements OnDestroy {
     private _keyboardService: CiKeyboardService,
     @Optional() @Self() private _control?: NgControl
   ) {
-    fromEvent(element.nativeElement, 'input').subscribe(({ target }) => {
-      console.log(target.value);
-    });
+    fromEvent(element.nativeElement, 'input').subscribe(({ target }) => {});
   }
 
   ngOnDestroy() {
@@ -90,7 +88,7 @@ export class CiKeyboardDirective implements OnDestroy {
     console.log(this._keyboardRef);
 
     if (this._keyboardRef) {
-      this._keyboardRef.dismiss();
+      // this._keyboardRef.dismiss();
     }
   }
 }

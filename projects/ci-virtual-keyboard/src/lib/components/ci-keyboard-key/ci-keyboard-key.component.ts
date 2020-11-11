@@ -31,7 +31,7 @@ export class CiKeyboardKeyComponent implements OnInit {
   private _repeatTimeoutHandler: any;
   private _repeatIntervalHandler: any;
   private _repeatState: boolean = false; // true if repeating, false if waiting
-
+  isDisabled = false;
   active$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   pressed$: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -111,8 +111,6 @@ export class CiKeyboardKeyComponent implements OnInit {
   get cssClass(): string {
     const classes = [];
 
-    
-
     if (this.isDeadKey) {
       classes.push('mat-keyboard-key-deadkey');
     }
@@ -157,6 +155,7 @@ export class CiKeyboardKeyComponent implements OnInit {
     // Trigger generic click event
     this.genericClick.emit(event);
 
+    this.getIrrelevant();
     // Do not execute keypress if key is currently repeating
     if (this._repeatState) {
       return;
@@ -167,49 +166,21 @@ export class CiKeyboardKeyComponent implements OnInit {
 
     // Manipulate the focused input / textarea value
     const caret = this.input ? this._getCursorPosition() : 0;
-
     let char: string;
     switch (this.key) {
       // this keys have no actions yet
       // TODO: add deadkeys and modifiers
-      case KeyboardClassKey.Alt:
       case KeyboardClassKey.AltGr:
-      case KeyboardClassKey.AltLk:
         this.altClick.emit(event);
-        break;
-
-      case KeyboardClassKey.Bksp:
-        this.deleteSelectedText();
-        this.bkspClick.emit(event);
         break;
 
       case KeyboardClassKey.Caps:
         this.capsClick.emit(event);
         break;
 
-      case KeyboardClassKey.Enter:
-        if (this._isTextarea()) {
-          char = VALUE_NEWLINE;
-        } else {
-          this.enterClick.emit(event);
-          // TODO: trigger submit / onSubmit / ngSubmit properly (for the time being this has to be handled by the user himself)
-          // console.log(this.control.ngControl.control.root)
-          // this.input.nativeElement.form.submit();
-        }
-        break;
-
-      case KeyboardClassKey.Shift:
-        this.shiftClick.emit(event);
-        break;
-
       case KeyboardClassKey.Space:
         char = VALUE_SPACE;
         this.spaceClick.emit(event);
-        break;
-
-      case KeyboardClassKey.Tab:
-        char = VALUE_TAB;
-        this.tabClick.emit(event);
         break;
 
       default:
@@ -253,24 +224,14 @@ export class CiKeyboardKeyComponent implements OnInit {
         case KeyboardClassKey.Shift:
           return;
 
-        case KeyboardClassKey.Bksp:
-          keyFn = () => {
-            this.deleteSelectedText();
-            this.bkspClick.emit();
-          };
-          break;
-
         case KeyboardClassKey.Space:
           char = VALUE_SPACE;
           keyFn = () => this.spaceClick.emit();
           break;
 
-        case KeyboardClassKey.Tab:
-          char = VALUE_TAB;
-          keyFn = () => this.tabClick.emit();
-          break;
-
         default:
+          console.log(char);
+
           char = `${this.key}`;
           keyFn = () => this.keyClick.emit();
           break;
@@ -431,8 +392,11 @@ export class CiKeyboardKeyComponent implements OnInit {
         this.input.nativeElement.selectionStart ||
         this.input.nativeElement.selectionStart === 0
       ) {
-        this.input.nativeElement.focus();
         this.input.nativeElement.setSelectionRange(position, position);
+        setTimeout(() => {
+          // this will make the execution after the above boolean has changed
+          this.input.nativeElement.focus();
+        }, 100);
         return true;
       }
       // fail city, fortunately this never happens (as far as I've tested) :)
@@ -454,8 +418,20 @@ export class CiKeyboardKeyComponent implements OnInit {
   getIrrelevant() {
     const arrLang = langArray;
     this.inputValue.charAt(0);
-    return arrLang.find(
-      (a) => a.startsWith(this.inputValue.charAt(0)) && a.charAt(1) === this.key
-    );
+    if (
+      arrLang.find((a) => {
+        console.log(a, this.inputValue.charAt(0), a.charAt(1));
+
+        return (
+          a.startsWith(this.inputValue.charAt(0)) && a.charAt(1) === this.key
+        );
+      })
+    ) {
+      console.log('abc');
+
+      this.isDisabled = true;
+    } else {
+      this.isDisabled = false;
+    }
   }
 }

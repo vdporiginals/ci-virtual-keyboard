@@ -1,1 +1,1 @@
-export const langArray = [];
+export const langArray = ['ca', 'con', 'cho'];

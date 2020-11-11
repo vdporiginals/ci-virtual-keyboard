@@ -34,10 +34,8 @@ export class CiKeyboardRef<T> {
 
   /** Dismisses the keyboard. */
   dismiss() {
-    console.log(this._afterClosed.closed);
 
     if (!this._afterClosed.closed) {
-      console.log(this._afterClosed.closed);
 
       this.containerInstance.exit();
     }
@@ -45,7 +43,6 @@ export class CiKeyboardRef<T> {
 
   /** Marks the keyboard as opened */
   _open() {
-    console.log(this._afterOpened.closed);
 
     if (!this._afterOpened.closed) {
       this._afterOpened.next();

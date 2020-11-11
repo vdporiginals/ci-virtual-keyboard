@@ -24,7 +24,6 @@ import { CiKeyboardKeyComponent } from '../ci-keyboard-key/ci-keyboard-key.compo
   preserveWhitespaces: false,
 })
 export class CiKeyboardComponent implements OnInit {
-
   private _isDebug: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   private _inputInstance$: BehaviorSubject<ElementRef | null> = new BehaviorSubject(
@@ -120,7 +119,6 @@ export class CiKeyboardComponent implements OnInit {
   // retrieves modified key
   getModifiedKey(key: (string | KeyboardClassKey)[]): string {
     let modifier: KeyboardModifier = this._modifier;
-
     // `CapsLock` inverts the meaning of `Shift`
     if (this._capsLocked) {
       modifier = this._invertShiftModifier(this._modifier);
@@ -146,13 +144,15 @@ export class CiKeyboardComponent implements OnInit {
     if (event.key === KeyboardClassKey.Caps) {
       this.onCapsClick(event.getModifierState(KeyboardClassKey.Caps));
     }
+
     if (
-      event.key === KeyboardClassKey.Alt &&
+      event.key === KeyboardClassKey.AltGr &&
       this._modifier !== KeyboardModifier.Alt &&
       this._modifier !== KeyboardModifier.ShiftAlt
     ) {
       this.onAltClick();
     }
+
     if (
       event.key === KeyboardClassKey.Shift &&
       this._modifier !== KeyboardModifier.Shift &&
@@ -177,7 +177,7 @@ export class CiKeyboardComponent implements OnInit {
 
     // simulate modifier release
     if (
-      event.key === KeyboardClassKey.Alt &&
+      event.key === KeyboardClassKey.AltGr &&
       (this._modifier === KeyboardModifier.Alt ||
         this._modifier === KeyboardModifier.ShiftAlt)
     ) {
@@ -221,13 +221,6 @@ export class CiKeyboardComponent implements OnInit {
       this._modifier === KeyboardModifier.ShiftAlt
     ) {
       this._modifier = this._invertShiftModifier(this._modifier);
-    }
-
-    if (
-      this._modifier === KeyboardModifier.Alt ||
-      this._modifier === KeyboardModifier.ShiftAlt
-    ) {
-      this._modifier = this._invertAltModifier(this._modifier);
     }
   }
 
