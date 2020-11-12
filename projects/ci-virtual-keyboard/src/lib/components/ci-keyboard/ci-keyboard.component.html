@@ -1,4 +1,4 @@
-<ci-keyboard-suggestion></ci-keyboard-suggestion>
+<ci-keyboard-suggestion [listKeySuggestion]="listKeySuggestion | async"></ci-keyboard-suggestion>
 <div class="ci-keyboard-wrapper">
   <nav class="ci-keyboard-layout">
     <div class="ci-keyboard-row" *ngFor="let row of layout">
@@ -9,6 +9,8 @@
           [key]="getModifiedKey(key)"
           [active]="isActive(key)"
           [input]="inputInstance | async"
+          [activeChar]="listActiveChar | async"
+          [lastChar]="lastChar | async"
           [control]="control"
           (enterClick)="onEnterClick()"
           (capsClick)="onCapsClick()"

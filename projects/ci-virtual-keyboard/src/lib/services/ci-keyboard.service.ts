@@ -16,6 +16,7 @@ import {
   CiKeyboardContainerComponent,
   KeyboardLayouts,
   KeyboardLayout,
+  CiKeyboardKeyComponent,
 } from '../../public-api';
 import { CiKeyboardRef } from '../event/key-ref';
 import { _applyConfigDefaults } from '../utils';

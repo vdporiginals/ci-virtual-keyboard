@@ -12,6 +12,7 @@ import { MatCommonModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import {MatChipsModule} from '@angular/material/chips';
 import { CiKeyboardSuggestionComponent } from './components/ci-keyboard-suggestion/ci-keyboard-suggestion.component';
 import { CI_KEYBOARD_LAYOUTS } from './config/key.config';
 import { lang } from './config/lang.config';
@@ -31,6 +32,7 @@ import { lang } from './config/lang.config';
     MatCommonModule,
     MatIconModule,
     MatInputModule,
+    MatChipsModule
   ],
   exports: [
     CiKeyboardContainerComponent,

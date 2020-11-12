@@ -1,15 +1,22 @@
 <button
   class="ci-keyboard-key"
   tabindex="-1"
-  [style.margin-right.px]="key === 'Y' ? '-5':'0'"
-  [style.margin-right.px]="key === 'P' ? '50':'0'"
-  [style.margin-left.px]="key === 'A' ? '100':'0'"
+  [style.margin-right.px]="key === 'Y' ? '-5' : '0'"
+  [style.margin-right.px]="key === 'P' ? '30' : '0'"
+  [style.margin-left.px]="key === 'A' ? '100' : '0'"
   [class.h-margin]="key === 'H'"
   [class.ci-keyboard-key-active]="active$ | async"
   [class.ci-keyboard-key-pressed]="pressed$ | async"
   [class.back-space]="key === ' '"
   [class.number-change]="key === '.?123'"
-  [disabled]="isDisabled === true"
+  [class.high_light]="activeHighlight.includes(key)"
+  [disabled]="
+    activeArr.includes(key.toUpperCase()) === false &&
+    activeArr.length > 0 &&
+    key !== '.?123' &&
+    key !== ' ' 
+    && !getNumArr(key)
+  "
   (click)="onClick($event)"
   (pointerdown)="onPointerDown()"
   (pointerleave)="cancelRepeat()"

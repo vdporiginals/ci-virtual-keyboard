@@ -1,12 +1,15 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
   Inject,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
@@ -26,14 +29,16 @@ const REPEAT_INTERVAL = 100;
   changeDetection: ChangeDetectionStrategy.OnPush,
   preserveWhitespaces: false,
 })
-export class CiKeyboardKeyComponent implements OnInit {
+export class CiKeyboardKeyComponent implements OnInit, OnChanges {
   private _deadkeyKeys: string[] = [];
   private _repeatTimeoutHandler: any;
   private _repeatIntervalHandler: any;
   private _repeatState: boolean = false; // true if repeating, false if waiting
+  numArr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
   isDisabled = false;
   active$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
+  activeArr = [];
+  activeHighlight = [];
   pressed$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   @Input()
@@ -62,6 +67,12 @@ export class CiKeyboardKeyComponent implements OnInit {
 
   @Input()
   control?: FormControl;
+
+  @Input()
+  activeChar = [];
+
+  @Input()
+  lastChar = [];
 
   @Output()
   genericClick = new EventEmitter<MouseEvent>();
@@ -143,19 +154,65 @@ export class CiKeyboardKeyComponent implements OnInit {
   // Inject dependencies
   constructor() {}
 
-  ngOnInit() {
-    // read the deadkeys
-  }
+  ngOnInit() {}
+  // ngAfterViewInit() {
+  //   langArray.forEach((a) => {
+  //     const concatArr = a.toUpperCase().split('');
+  //     if (a.startsWith(this.activeChar[0])) {
+  //       this.activeArr = [...new Set(this.activeArr.concat(concatArr))];
+  //     }
+  //   });
+  // }
 
   ngOnDestroy() {
     this.cancelRepeat();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    // console.log(this.activeChar);
+    // if (changes.activeChar) {
+    //   if (changes.activeChar.currentValue.length > 0) {
+
+    //     console.log(this.activeArr);
+    //   } else {
+    //     this.activeArr = [];
+    //   }
+    // } else {
+    //   this.activeArr = [];
+    // }
+
+    if (changes.lastChar) {
+      const arrLang = langArray;
+      const lastCharArr = [];
+      if (changes.lastChar.currentValue.length > 0) {
+        arrLang.forEach((a) => {
+          const concatArr = a.toUpperCase().split('');
+          if (
+            a
+              .toLowerCase()
+              .startsWith(changes.lastChar.currentValue[0][0]?.toLowerCase())
+          ) {
+            this.activeArr = [...new Set(this.activeArr.concat(concatArr))];
+          }
+        });
+
+        changes.lastChar.currentValue[0]?.forEach((element) => {
+          lastCharArr.push(element.toUpperCase());
+          this.activeHighlight = lastCharArr;
+        });
+        // console.log(this.activeHighlight);
+      } else {
+        this.activeHighlight = [];
+        this.activeArr = [];
+      }
+    } else {
+      this.activeHighlight = [];
+      this.activeArr = [];
+    }
+  }
   onClick(event: MouseEvent) {
     // Trigger generic click event
     this.genericClick.emit(event);
-
-    this.getIrrelevant();
     // Do not execute keypress if key is currently repeating
     if (this._repeatState) {
       return;
@@ -203,6 +260,8 @@ export class CiKeyboardKeyComponent implements OnInit {
         );
       });
     }
+
+    // this.getIrrelevant();
   }
 
   // Handle repeating keys. Keypress logic derived from onClick()
@@ -282,7 +341,6 @@ export class CiKeyboardKeyComponent implements OnInit {
       if (caret === 0) {
         return;
       }
-
       caret--;
       selectionLength = 1;
     }
@@ -303,27 +361,6 @@ export class CiKeyboardKeyComponent implements OnInit {
 
     this.inputValue = [headPart, char, endPart].join('');
   }
-
-  // TODO: Include for repeating keys as well (if this gets implemented)
-  // private _triggerKeyEvent(): Event {
-  //   const keyboardEvent = new KeyboardEvent('keydown');
-  //   //
-  //   // keyboardEvent[initMethod](
-  //   //   true, // bubbles
-  //   //   true, // cancelable
-  //   //   window, // viewArg: should be window
-  //   //   false, // ctrlKeyArg
-  //   //   false, // altKeyArg
-  //   //   false, // shiftKeyArg
-  //   //   false, // metaKeyArg
-  //   //   this.charCode, // keyCodeArg : unsigned long - the virtual key code, else 0
-  //   //   0 // charCodeArgs : unsigned long - the Unicode character associated with the depressed key, else 0
-  //   // );
-  //   //
-  //   // window.document.dispatchEvent(keyboardEvent);
-
-  //   return keyboardEvent;
-  // }
 
   // inspired by:
   // ref https://stackoverflow.com/a/2897510/1146207
@@ -417,21 +454,29 @@ export class CiKeyboardKeyComponent implements OnInit {
 
   getIrrelevant() {
     const arrLang = langArray;
-    this.inputValue.charAt(0);
-    if (
-      arrLang.find((a) => {
-        console.log(a, this.inputValue.charAt(0), a.charAt(1));
+    const inputArr = this.inputValue.split('');
+    console.log(this.inputValue.split(''));
+    if (this.inputValue.length > 0) {
+      this.inputValue.split('')[0];
 
-        return (
-          a.startsWith(this.inputValue.charAt(0)) && a.charAt(1) === this.key
-        );
-      })
-    ) {
-      console.log('abc');
-
-      this.isDisabled = true;
+      arrLang.forEach((a) => {
+        if (
+          a.toLowerCase().startsWith(inputArr[0].toLowerCase()) &&
+          a.charAt(1).toLowerCase() === this.key.toLowerCase()
+        ) {
+          // this.listActiveChar.next(
+          //   this.listActiveChar.getValue().concat(this.key)
+          // );
+        }
+      });
     } else {
-      this.isDisabled = false;
+      // this.listActiveChar.next([]);
     }
   }
+
+  getNumArr(key) {
+    return this.numArr.includes(key);
+  }
+
+  
 }

@@ -10,7 +10,7 @@ import {
   Self,
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { fromEvent } from 'rxjs';
+import { fromEvent, Subscription } from 'rxjs';
 import { CiKeyboardComponent } from '../components/ci-keyboard/ci-keyboard.component';
 
 import { CiKeyboardRef } from '../event/key-ref';
@@ -21,7 +21,7 @@ import { CiKeyboardService } from '../services/ci-keyboard.service';
 })
 export class CiKeyboardDirective implements OnDestroy {
   private _keyboardRef: CiKeyboardRef<CiKeyboardComponent>;
-
+  public currentEvent: Subscription;
   @Input() ciKeyboard: string;
 
   //   @Input() darkTheme: boolean;
@@ -44,10 +44,38 @@ export class CiKeyboardDirective implements OnDestroy {
     private _keyboardService: CiKeyboardService,
     @Optional() @Self() private _control?: NgControl
   ) {
-    fromEvent(element.nativeElement, 'input').subscribe(({ target }) => {});
+    this.currentEvent = fromEvent(element.nativeElement, 'input').subscribe(
+      ({ target }) => {
+        const lastChar = target.value.split(' ');
+
+        if (target.value.split('').length > 0) {
+          this._keyboardRef.instance.listActiveChar.next(
+            target.value.split('')
+          );
+        } else {
+          this._keyboardRef.instance.listActiveChar.next([]);
+        }
+
+        if (lastChar[lastChar.length - 1].split('').length > 0) {
+          this._keyboardRef.instance.lastChar.next([
+            lastChar[lastChar.length - 1].split(''),
+          ]);
+          
+          this._keyboardRef.instance.listKeySuggestion.next(
+            lastChar[lastChar.length - 1]
+          );
+        } else {
+          this._keyboardRef.instance.lastChar.next([]);
+          this._keyboardRef.instance.listKeySuggestion.next([]);
+        }
+      }
+    );
   }
 
   ngOnDestroy() {
+    if (this.currentEvent) {
+      this.currentEvent.unsubscribe();
+    }
     this.hideKeyboard();
   }
 
@@ -85,10 +113,8 @@ export class CiKeyboardDirective implements OnDestroy {
 
   @HostListener('blur', ['$event'])
   public hideKeyboard() {
-    console.log(this._keyboardRef);
-
-    if (this._keyboardRef) {
-      // this._keyboardRef.dismiss();
-    }
+    // if (this._keyboardRef) {
+    //   this._keyboardRef.dismiss();
+    // }
   }
 }

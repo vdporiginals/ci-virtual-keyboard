@@ -25,6 +25,17 @@ $mat-keyboard-capslock-shine: #adff2f !default;
   width: 68% !important;
   opacity: 0.7;
   border-radius: 2rem !important;
+  background-position: center !important;
+  transition: background 0.8s !important;
+  &:hover {
+    background: #fff radial-gradient(circle, transparent 1%, #fff 1%)
+      center/15000% !important;
+  }
+  &:active {
+    background-color: #8b298e !important;
+    background-size: 100% !important;
+    transition: background 0s !important;
+  }
 }
 .number-change {
   margin-left: 30px !important;
@@ -44,10 +55,14 @@ $mat-keyboard-capslock-shine: #adff2f !default;
     background-color: rgb(255, 255, 255, 0.9);
     border-radius: 1rem;
     height: 67px;
+
     &-active {
       background-color: mat-color($mat-grey, 300);
     }
-
+    &:disabled {
+      transition: 500ms ease-out;
+      background-color: rgb(255, 255, 255, 0.2);
+    }
     &-pressed {
       background-color: mat-color($mat-grey, 400);
     }
@@ -77,7 +92,6 @@ $mat-keyboard-capslock-shine: #adff2f !default;
       }
     }
   }
-
   :host-context(.dark-theme) &-key {
     background-color: mat-color($mat-grey, 700);
     color: mat-color($mat-grey, 100);
@@ -143,4 +157,12 @@ $mat-keyboard-capslock-shine: #adff2f !default;
       background-color: lighten(mediumpurple, 10%);
     }
   }
+}
+
+.high_light {
+  background: linear-gradient(to bottom, #8b298e 0%, #3465c7 100%);
+  background-color: unset !important;
+  opacity: 1 !important;
+  transition: 500ms ease-out;
+  color: #fff !important;
 }

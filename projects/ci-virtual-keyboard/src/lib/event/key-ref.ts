@@ -1,6 +1,7 @@
 import { OverlayRef } from '@angular/cdk/overlay';
 import { Observable, Subject } from 'rxjs';
 import { CiKeyboardContainerComponent } from '../components/ci-keyboard-container/ci-keyboard-container.component';
+import { CiKeyboardKeyComponent } from '../components/ci-keyboard-key/ci-keyboard-key.component';
 import { CiKeyboardComponent } from '../components/ci-keyboard/ci-keyboard.component';
 
 /**
@@ -34,16 +35,13 @@ export class CiKeyboardRef<T> {
 
   /** Dismisses the keyboard. */
   dismiss() {
-
     if (!this._afterClosed.closed) {
-
       this.containerInstance.exit();
     }
   }
 
   /** Marks the keyboard as opened */
   _open() {
-
     if (!this._afterOpened.closed) {
       this._afterOpened.next();
       this._afterOpened.complete();

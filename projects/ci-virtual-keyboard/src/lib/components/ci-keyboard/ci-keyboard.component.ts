@@ -29,7 +29,10 @@ export class CiKeyboardComponent implements OnInit {
   private _inputInstance$: BehaviorSubject<ElementRef | null> = new BehaviorSubject(
     null
   );
-
+  
+  listActiveChar: BehaviorSubject<any> = new BehaviorSubject<any[]>([]);
+  listKeySuggestion: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  lastChar: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([])
   @ViewChildren(CiKeyboardKeyComponent)
   private _keys: QueryList<CiKeyboardKeyComponent>;
 

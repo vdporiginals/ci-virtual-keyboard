@@ -76,7 +76,6 @@ export const layoutKeyboard = [
     ['L', 'L'],
     ['M', 'M'],
     ['N', 'N'],
-    ['I', 'I'],
     ['O', 'O'],
     ['\u00D4', '\u00D4'],
     ['\u01A0', '\u01A0'],
