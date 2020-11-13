@@ -1,34 +1,11 @@
 <div class="suggestion_wrap">
   <div class="list_chips">
     <mat-chip-list aria-label="Fish selection">
-      <mat-chip>One fish</mat-chip>
-      <mat-chip>Two fish</mat-chip>
-      <mat-chip color="primary" selected>Primary fish</mat-chip>
-      <mat-chip color="accent" selected>Accent fish</mat-chip>
-      <mat-chip>One fish</mat-chip>
-      <mat-chip>Two fish</mat-chip>
-      <mat-chip color="primary" selected>Primary fish</mat-chip>
-      <mat-chip color="accent" selected>Accent fish</mat-chip>
-      <mat-chip>One fish</mat-chip>
-      <mat-chip>Two fish</mat-chip>
-      <mat-chip color="primary" selected>Primary fish</mat-chip>
-      <mat-chip color="accent" selected>Accent fish</mat-chip>
-      <mat-chip>One fish</mat-chip>
-      <mat-chip>Two fish</mat-chip>
-      <mat-chip color="primary" selected>Primary fish</mat-chip>
-      <mat-chip color="accent" selected>Accent fish</mat-chip>
-      <mat-chip>One fish</mat-chip>
-      <mat-chip>Two fish</mat-chip>
-      <mat-chip color="primary" selected>Primary fish</mat-chip>
-      <mat-chip color="accent" selected>Accent fish</mat-chip>
-      <mat-chip>One fish</mat-chip>
-      <mat-chip>Two fish</mat-chip>
-      <mat-chip color="primary" selected>Primary fish</mat-chip>
-      <mat-chip color="accent" selected>Accent fish</mat-chip
-      ><mat-chip>One fish</mat-chip>
-      <mat-chip>Two fish</mat-chip>
-      <mat-chip color="primary" selected>Primary fish</mat-chip>
-      <mat-chip color="accent" selected>Accent fish</mat-chip>
+      <mat-chip
+        *ngFor="let item of currentSuggestion | async"
+        (click)="changeWord(item.text)"
+        >{{ item.text }}</mat-chip
+      >
     </mat-chip-list>
   </div>
 </div>

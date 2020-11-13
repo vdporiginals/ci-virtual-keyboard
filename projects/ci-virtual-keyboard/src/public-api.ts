@@ -12,6 +12,7 @@ export * from './lib/components/ci-keyboard-key/ci-keyboard-key.component';
 
 export * from './lib/config/keyboard.config';
 export * from './lib/config/lang.config';
+export * from './lib/config/key.dic';
 export * from './lib/config/key.config';
 export * from './lib/directives/ci-keyboard.directive';
 

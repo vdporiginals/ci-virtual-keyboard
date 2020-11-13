@@ -113,8 +113,8 @@ export class CiKeyboardDirective implements OnDestroy {
 
   @HostListener('blur', ['$event'])
   public hideKeyboard() {
-    // if (this._keyboardRef) {
-    //   this._keyboardRef.dismiss();
-    // }
+    if (this._keyboardRef) {
+      this._keyboardRef.dismiss();
+    }
   }
 }

@@ -289,7 +289,7 @@ export class CiKeyboardKeyComponent implements OnInit, OnChanges {
           break;
 
         default:
-          console.log(char);
+          // console.log(char);
 
           char = `${this.key}`;
           keyFn = () => this.keyClick.emit();
@@ -455,7 +455,7 @@ export class CiKeyboardKeyComponent implements OnInit, OnChanges {
   getIrrelevant() {
     const arrLang = langArray;
     const inputArr = this.inputValue.split('');
-    console.log(this.inputValue.split(''));
+    // console.log(this.inputValue.split(''));
     if (this.inputValue.length > 0) {
       this.inputValue.split('')[0];
 

@@ -8,5 +8,5 @@ import { FormControl } from '@angular/forms';
 })
 export class AppComponent {
   formTest = new FormControl('');
-  title = 'ci-virtual-keyboard-example';
+  title = '';
 }
