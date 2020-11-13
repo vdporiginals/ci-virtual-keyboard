@@ -57,18 +57,16 @@ export class CiKeyboardSuggestionComponent implements OnInit, OnChanges {
               //   .slice(0, 15);
               // } else {
               //   this.wordDic = wordList;
-                return this.wordDic
+              return this.wordDic
                 .filter((a: WordList) => {
-                  return this.escapeUnicode(a.text)
-                    .toLowerCase()
-                    .startsWith(
-                      this.escapeUnicode(
-                        changes.listKeySuggestion.currentValue.toLowerCase()
-                      )
-                    );
+                  return a.text.toLowerCase().startsWith(
+                    // this.escapeUnicode(
+                    changes.listKeySuggestion.currentValue.toLowerCase()
+                    // )
+                  );
                 })
                 .slice(0, 15);
-              }
+            }
             // }
           })
         )

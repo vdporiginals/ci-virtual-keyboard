@@ -1,4 +1,4 @@
-$mat-keyboard-padding: 14px 35px !default;
+$mat-keyboard-padding: 16px 35px !default;
 .suggestion_wrap {
   -webkit-backdrop-filter: blur(30px) brightness(50%) opacity(0.3);
   backdrop-filter: blur(30px) brightness(50%) opacity(0.3);
@@ -6,7 +6,7 @@ $mat-keyboard-padding: 14px 35px !default;
   // opacity: 0.7;
   display: grid;
   margin: 20px;
-  height: 74px;
+  height: 77px !important;
   grid-gap: 10px;
   grid-template-columns: repeat(auto-fit, auto);
   justify-content: center;
@@ -15,15 +15,16 @@ $mat-keyboard-padding: 14px 35px !default;
   overflow: hidden;
   padding: $mat-keyboard-padding;
 }
+
 .list_chips {
   overflow-y: auto;
   overflow-x: hidden;
-  height: 74px;
+  height: 74px !important;
 }
+
 .mat-chip {
   background: rgb(255, 255, 255, 0.6);
   color: #000;
-  font-weight: 500;
   font-size: 1.7em;
 }
 

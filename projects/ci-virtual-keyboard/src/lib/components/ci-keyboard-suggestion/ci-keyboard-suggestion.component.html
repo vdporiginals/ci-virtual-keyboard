@@ -1,4 +1,4 @@
-<div class="suggestion_wrap">
+<div class="suggestion_wrap" *ngIf="currentSuggestion.getValue().length > 0 && currentSuggestion | async">
   <div class="list_chips">
     <mat-chip-list aria-label="Fish selection">
       <mat-chip

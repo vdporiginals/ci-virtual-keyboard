@@ -187,10 +187,11 @@ export class CiKeyboardKeyComponent implements OnInit, OnChanges {
       if (changes.lastChar.currentValue.length > 0) {
         arrLang.forEach((a) => {
           const concatArr = a.toUpperCase().split('');
+          const currentval = changes.lastChar.currentValue[0];
           if (
             a
               .toLowerCase()
-              .startsWith(changes.lastChar.currentValue[0][0]?.toLowerCase())
+              .startsWith(currentval[currentval.length - 1]?.toLowerCase())
           ) {
             this.activeArr = [...new Set(this.activeArr.concat(concatArr))];
           }
@@ -477,6 +478,4 @@ export class CiKeyboardKeyComponent implements OnInit, OnChanges {
   getNumArr(key) {
     return this.numArr.includes(key);
   }
-
-  
 }

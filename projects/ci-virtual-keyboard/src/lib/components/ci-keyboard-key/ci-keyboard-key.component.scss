@@ -20,6 +20,7 @@ $mat-keyboard-capslock-shine: #adff2f !default;
   justify-content: space-between;
   line-height: 20px;
 }
+
 .back-space {
   height: 50px !important;
   width: 68% !important;
@@ -37,15 +38,18 @@ $mat-keyboard-capslock-shine: #adff2f !default;
     transition: background 0s !important;
   }
 }
+
 .number-change {
   margin-left: 30px !important;
   width: 113px !important;
   opacity: 0.7;
   font-size: 1.6em !important;
 }
+
 .h-margin {
   margin-left: 30px !important;
 }
+
 .ci-keyboard {
   &-key {
     min-width: 0;
