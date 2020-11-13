@@ -1,24 +1,43 @@
-# CiVirtualKeyboard
+# Install
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.2.0.
+npm i ci-virtual-keyboard --save
 
-## Code scaffolding
+## Hướng dẫn sử dụng
 
-Run `ng generate component component-name --project ci-virtual-keyboard` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ci-virtual-keyboard`.
-> Note: Don't forget to add `--project ci-virtual-keyboard` or else it will be added to the default project in your `angular.json` file. 
+1. Import module tại
 
-## Build
+```
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { CiVirtualKeyboardModule } from 'ci-virtual-keyboard';
 
-Run `ng build ci-virtual-keyboard` to build the project. The build artifacts will be stored in the `dist/` directory.
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    CiVirtualKeyboardModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
 
-## Publishing
+2. Sử dụng directive tại input để sử dụng phím ảo
 
-After building your library with `ng build ci-virtual-keyboard`, go to the dist folder `cd dist/ci-virtual-keyboard` and run `npm publish`.
+```:angular2html
+<input
+    ciKeyboard
+    [(ngModel)]="title"
+  />
+```
 
-## Running unit tests
 
-Run `ng test ci-virtual-keyboard` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Ý tưởng
+[Đến từ thư viện][Idea]
 
-## Further help
+## Development
+Phát triển bởi phuong.vd@consultindochina.com
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+#### MIT License
+
+[Idea]: https://github.com/Iris0905/angular-onscreen-material-keyboard

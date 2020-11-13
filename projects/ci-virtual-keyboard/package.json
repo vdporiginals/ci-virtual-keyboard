@@ -1,6 +1,17 @@
 {
   "name": "ci-virtual-keyboard",
   "version": "0.0.1",
+  "description": "This package is forked from angular-onscreen-material-keyboard with add new features",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vdporiginals/ci-virtual-keyboard.git"
+  },
+  "author": "Duy Phuong",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vdporiginals/ci-virtual-keyboard.git/issues"
+  },
+  "homepage": "https://github.com/vdporiginals/ci-virtual-keyboard.git",
   "peerDependencies": {
     "@angular/animations": "~10.2.0",
     "@angular/common": "^10.2.0",
