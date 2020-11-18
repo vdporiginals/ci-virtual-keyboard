@@ -185,6 +185,8 @@ export class CiKeyboardKeyComponent implements OnInit, OnChanges {
       const arrLang = langArray;
       const lastCharArr = [];
       if (changes.lastChar.currentValue.length > 0) {
+        console.log(changes.lastChar.currentValue.length);
+        
         arrLang.forEach((a) => {
           const concatArr = a.toUpperCase().split('');
           const currentval = changes.lastChar.currentValue[0];
@@ -203,6 +205,7 @@ export class CiKeyboardKeyComponent implements OnInit, OnChanges {
         });
         // console.log(this.activeHighlight);
       } else {
+        console.log(changes.lastChar.currentValue);
         this.activeHighlight = [];
         this.activeArr = [];
       }

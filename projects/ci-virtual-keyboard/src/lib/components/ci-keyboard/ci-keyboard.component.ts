@@ -32,7 +32,7 @@ export class CiKeyboardComponent implements OnInit {
   historySuggest: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   listActiveChar: BehaviorSubject<any> = new BehaviorSubject<any[]>([]);
   listKeySuggestion: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
-  lastChar: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  lastChar: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([])
   @ViewChildren(CiKeyboardKeyComponent)
   private _keys: QueryList<CiKeyboardKeyComponent>;
 
@@ -80,12 +80,10 @@ export class CiKeyboardComponent implements OnInit {
   // inject dependencies
   constructor(private _keyboardService: CiKeyboardService) {
     //   this.attachControl();
-
+    
     this.inputInstance.subscribe((res) => {
-      console.log(res);
       if (res) {
         fromEvent(res.nativeElement, 'input').subscribe(({ target }) => {
-          console.log(target);
 
           const lastChar = target.value.split(' ');
 

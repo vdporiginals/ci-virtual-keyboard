@@ -1,14 +1,22 @@
-<div class="col">
-  <mat-form-field>
-    <input hidden #attachTo matInput placeholder="Attach me if you can" name="attach" [(ngModel)]="attachModelValue">
-    <!-- <mat-hint>Input to attach keyboard to</mat-hint> -->
-  </mat-form-field>
-
-  <pre>{{ attachModelValue }}</pre>
+<input
+  hidden
+  #attachTo
+  placeholder="Attach me if you can"
+  name="attach"
+  [(ngModel)]="attachModelValue"
+/>
+<!-- <mat-hint>Input to attach keyboard to</mat-hint> -->
+<!-- </mat-form-field> -->
+<pre>{{ attachModelValue }}</pre>
+<div class="btn_area">
+  <div class="header">
+    <button (click)="deleteText(1)">Xóa chữ</button>
+    <button (click)="deleteText(2)">Xóa từ</button>
+  </div>
+  <button class="clear_all" (click)="deleteText(3)">Xóa Toàn bộ</button>
+  <button class="show" (click)="showText()">Hiển thị</button>
 </div>
-
-<div class="col">
-</div>
+<!-- 
 <button mat-raised-button type="button" (click)="openAttachedKeyboard()" aria-label="Attach default keyboard">
-  Attach default keyboard
-</button>
+Attach default keyboard
+</button> -->

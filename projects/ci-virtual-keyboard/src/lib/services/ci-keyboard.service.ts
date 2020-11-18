@@ -26,9 +26,14 @@ import { _applyConfigDefaults } from '../utils';
  */
 @Injectable()
 export class CiKeyboardService {
-  private _keyboardRefAtThisLevel: CiKeyboardRef<CiKeyboardComponent> | null = null;
-
-  // private _availableLocales: ILocaleMap = {};
+  /**
+   * Reference to the current keyboard in the view *at this level* (in the Angular injector tree).
+   * If there is a parent keyboard service, all operations should delegate to that parent
+   * via `_openedKeyboardRef`.
+   */
+  private _keyboardRefAtThisLevel: CiKeyboardRef<
+    CiKeyboardComponent
+  > | null = null;
 
   /** Reference to the currently opened keyboard at *any* level. */
   private get _openedKeyboardRef(): CiKeyboardRef<CiKeyboardComponent> | null {
@@ -44,21 +49,18 @@ export class CiKeyboardService {
     }
   }
 
-  // get availableLocales(): ILocaleMap {
-  //   return this._availableLocales;
-  // }
-
   get isOpened(): boolean {
     return !!this._openedKeyboardRef;
   }
+  private _defaultLocale: string = 'vi-VN';
 
-  constructor(private _overlay: Overlay,
-              private _live: LiveAnnouncer,
-              @Inject(LOCALE_ID) private _defaultLocale: string,
-              @Inject(CI_KEYBOARD_LAYOUTS) private _layouts: KeyboardLayouts,
-              @Optional() @SkipSelf() private _parentKeyboard: CiKeyboardService) {
+  constructor(
+    private _overlay: Overlay,
+    private _live: LiveAnnouncer,
+    @Inject(CI_KEYBOARD_LAYOUTS) private _layouts: KeyboardLayouts,
+    @Optional() @SkipSelf() private _parentKeyboard: CiKeyboardService
+  ) {
     // prepare available layouts mapping
-    // this._availableLocales = _applyAvailableLayouts(_layouts);
   }
 
   /**
@@ -68,46 +70,34 @@ export class CiKeyboardService {
    * @param layoutOrLocale layout or locale to use.
    * @param config Extra configuration for the keyboard.
    */
-  openFromComponent(layoutOrLocale: string, config: CiKeyboardConfig): CiKeyboardRef<CiKeyboardComponent> {
-    const keyboardRef: CiKeyboardRef<CiKeyboardComponent> = this._attachKeyboardContent(config);
+  openFromComponent(
+    layoutOrLocale: string,
+    config: CiKeyboardConfig
+  ): CiKeyboardRef<CiKeyboardComponent> {
+    const keyboardRef: CiKeyboardRef<CiKeyboardComponent> = this._attachKeyboardContent(
+      config
+    );
 
-    // keyboardRef.instance.darkTheme = config.darkTheme;
     keyboardRef.instance.isDebug = config.isDebug;
 
     // a locale is provided
-    // if (this.availableLocales[layoutOrLocale]) {
-    //   keyboardRef.instance.locale = layoutOrLocale;
-    //   keyboardRef.instance.layout = this.getLayoutForLocale(layoutOrLocale);
-    // }
 
     // a layout name is provided
-    // if (this._layouts[layoutOrLocale]) {
-    //   keyboardRef.instance.layout = this._layouts[layoutOrLocale];
-    //   keyboardRef.instance.locale = this._layouts[layoutOrLocale].lang && this._layouts[layoutOrLocale].lang.pop();
-    // }
-
-    // if (config.customIcons) {
-    //   keyboardRef.instance.icons = config.customIcons;
-    // }
 
     // When the keyboard is dismissed, lower the keyboard counter.
-    keyboardRef
-      .afterDismissed()
-      .subscribe(() => {
-        // Clear the keyboard ref if it hasn't already been replaced by a newer keyboard.
-        if (this._openedKeyboardRef === keyboardRef) {
-          this._openedKeyboardRef = null;
-        }
-      });
+    keyboardRef.afterDismissed().subscribe(() => {
+      // Clear the keyboard ref if it hasn't already been replaced by a newer keyboard.
+      if (this._openedKeyboardRef === keyboardRef) {
+        this._openedKeyboardRef = null;
+      }
+    });
 
     if (this._openedKeyboardRef) {
       // If a keyboard is already in view, dismiss it and enter the
-      // new keyboard after exit animation is complete.
-      this._openedKeyboardRef
-        .afterDismissed()
-        .subscribe(() => {
-          keyboardRef.containerInstance.enter();
-        });
+      // new keyboard after exit aniCiion is complete.
+      this._openedKeyboardRef.afterDismissed().subscribe(() => {
+        keyboardRef.containerInstance.enter();
+      });
       this._openedKeyboardRef.dismiss();
     } else {
       // If no keyboard is in view, enter the new keyboard.
@@ -134,7 +124,10 @@ export class CiKeyboardService {
    * @param layoutOrLocale A string representing the locale or the layout name to be used.
    * @param config Additional configuration options for the keyboard.
    */
-  open(layoutOrLocale: string = this._defaultLocale, config: CiKeyboardConfig = {}): CiKeyboardRef<CiKeyboardComponent> {
+  open(
+    layoutOrLocale: string = this._defaultLocale,
+    config: CiKeyboardConfig = {}
+  ): CiKeyboardRef<CiKeyboardComponent> {
     const _config = _applyConfigDefaults(config);
 
     return this.openFromComponent(layoutOrLocale, _config);
@@ -155,26 +148,17 @@ export class CiKeyboardService {
    */
   mapLocale(locale: string = this._defaultLocale): string {
     let layout: string;
-    const country = locale
-      .split('-')
-      .shift();
+    const country = locale.split('-').shift();
 
-    // search for layout matching the
+    // search for layout Ciching the
     // first part, the country code
-    // if (this.availableLocales[country]) {
-    //   layout = this.availableLocales[locale];
+    // look if the detailed locale Ciches any layout
+
+    // if (!layout) {
+    //   throw Error(`No layout found for locale ${locale}`);
     // }
 
-    // look if the detailed locale matches any layout
-    // if (this.availableLocales[locale]) {
-    //   layout = this.availableLocales[locale];
-    // }
-
-    if (!layout) {
-      throw Error(`No layout found for locale ${locale}`);
-    }
-
-    return 'vi-VN';
+    return 'vi';
   }
 
   getLayoutForLocale(locale: string): KeyboardLayout {
@@ -184,9 +168,17 @@ export class CiKeyboardService {
   /**
    * Attaches the keyboard container component to the overlay.
    */
-  private _attachKeyboardContainer(overlayRef: OverlayRef, config: CiKeyboardConfig): CiKeyboardContainerComponent {
-    const containerPortal = new ComponentPortal(CiKeyboardContainerComponent, config.viewContainerRef);
-    const containerRef: ComponentRef<CiKeyboardContainerComponent> = overlayRef.attach(containerPortal);
+  private _attachKeyboardContainer(
+    overlayRef: OverlayRef,
+    config: CiKeyboardConfig
+  ): CiKeyboardContainerComponent {
+    const containerPortal = new ComponentPortal(
+      CiKeyboardContainerComponent,
+      config.viewContainerRef
+    );
+    const containerRef: ComponentRef<CiKeyboardContainerComponent> = overlayRef.attach(
+      containerPortal
+    );
 
     // set config
     containerRef.instance.keyboardConfig = config;
@@ -197,12 +189,18 @@ export class CiKeyboardService {
   /**
    * Places a new component as the content of the keyboard container.
    */
-  private _attachKeyboardContent(config: CiKeyboardConfig): CiKeyboardRef<CiKeyboardComponent> {
+  private _attachKeyboardContent(
+    config: CiKeyboardConfig
+  ): CiKeyboardRef<CiKeyboardComponent> {
     const overlayRef = this._createOverlay();
     const container = this._attachKeyboardContainer(overlayRef, config);
     const portal = new ComponentPortal(CiKeyboardComponent);
     const contentRef = container.attachComponentPortal(portal);
-    return new CiKeyboardRef(contentRef.instance, container, overlayRef) as CiKeyboardRef<CiKeyboardComponent>;
+    return new CiKeyboardRef(
+      contentRef.instance,
+      container,
+      overlayRef
+    ) as CiKeyboardRef<CiKeyboardComponent>;
   }
 
   /**
@@ -210,7 +208,7 @@ export class CiKeyboardService {
    */
   private _createOverlay(): OverlayRef {
     const state = new OverlayConfig({
-      width: '100%'
+      width: '100%',
     });
 
     state.positionStrategy = this._overlay
