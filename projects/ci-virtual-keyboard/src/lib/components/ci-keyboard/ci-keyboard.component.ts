@@ -10,7 +10,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, fromEvent, Observable } from 'rxjs';
 import { layoutKeyboard } from '../../config/key.config';
 import { CiKeyboardRef } from '../../event/key-ref';
 import { KeyboardClassKey, KeyboardModifier } from '../../models/keyclass.enum';
@@ -29,10 +29,10 @@ export class CiKeyboardComponent implements OnInit {
   private _inputInstance$: BehaviorSubject<ElementRef | null> = new BehaviorSubject(
     null
   );
-  
+  historySuggest: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   listActiveChar: BehaviorSubject<any> = new BehaviorSubject<any[]>([]);
   listKeySuggestion: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
-  lastChar: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([])
+  lastChar: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   @ViewChildren(CiKeyboardKeyComponent)
   private _keys: QueryList<CiKeyboardKeyComponent>;
 
@@ -80,6 +80,32 @@ export class CiKeyboardComponent implements OnInit {
   // inject dependencies
   constructor(private _keyboardService: CiKeyboardService) {
     //   this.attachControl();
+
+    this.inputInstance.subscribe((res) => {
+      console.log(res);
+      if (res) {
+        fromEvent(res.nativeElement, 'input').subscribe(({ target }) => {
+          console.log(target);
+
+          const lastChar = target.value.split(' ');
+
+          if (target.value.split('').length > 0) {
+            this.listActiveChar.next(target.value.split(''));
+          } else {
+            this.listActiveChar.next([]);
+          }
+
+          if (lastChar[lastChar.length - 1].split('').length > 0) {
+            this.lastChar.next([lastChar[lastChar.length - 1].split('')]);
+
+            this.listKeySuggestion.next(lastChar[lastChar.length - 1]);
+          } else {
+            this.lastChar.next([]);
+            this.listKeySuggestion.next([]);
+          }
+        });
+      }
+    });
   }
 
   setInputInstance(inputInstance: ElementRef) {

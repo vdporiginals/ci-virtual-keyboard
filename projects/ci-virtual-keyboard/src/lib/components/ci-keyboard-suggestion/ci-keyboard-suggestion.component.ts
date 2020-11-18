@@ -9,10 +9,12 @@ import {
 import { BehaviorSubject, from } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { wordList } from '../../config/key.dic';
+
 export interface WordList {
   text: string;
   source: string;
 }
+
 @Component({
   selector: 'ci-keyboard-suggestion',
   templateUrl: './ci-keyboard-suggestion.component.html',
@@ -32,6 +34,8 @@ export class CiKeyboardSuggestionComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {}
   ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
+    
     if (changes.listKeySuggestion) {
       from(changes.listKeySuggestion.currentValue)
         .pipe(
@@ -42,21 +46,6 @@ export class CiKeyboardSuggestionComponent implements OnInit, OnChanges {
             if (query === null || query === '') {
               return;
             } else {
-              // if (this.historyWord) {
-              //   this.wordDic = this.historyWord;
-              //   return this.wordDic
-              //   .filter((a: any) => {
-              //     return this.escapeUnicode(a)
-              //       .toLowerCase()
-              //       .startsWith(
-              //         this.escapeUnicode(
-              //           changes.listKeySuggestion.currentValue.toLowerCase()
-              //         )
-              //       );
-              //   })
-              //   .slice(0, 15);
-              // } else {
-              //   this.wordDic = wordList;
               return this.wordDic
                 .filter((a: WordList) => {
                   return a.text.toLowerCase().startsWith(

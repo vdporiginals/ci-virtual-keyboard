@@ -17,7 +17,7 @@ import { CiKeyboardRef } from '../event/key-ref';
 import { CiKeyboardService } from '../services/ci-keyboard.service';
 
 @Directive({
-  selector: 'input[ciKeyboard], textarea[ciKeyboard]',
+  selector: '[ciKeyboard]',
 })
 export class CiKeyboardDirective implements OnDestroy {
   private _keyboardRef: CiKeyboardRef<CiKeyboardComponent>;
@@ -25,7 +25,7 @@ export class CiKeyboardDirective implements OnDestroy {
   @Input() ciKeyboard: string;
 
   //   @Input() darkTheme: boolean;
-
+  @Input() historySuggest;
   @Input() duration: number;
 
   @Input() isDebug: boolean;
@@ -46,6 +46,8 @@ export class CiKeyboardDirective implements OnDestroy {
   ) {
     this.currentEvent = fromEvent(element.nativeElement, 'input').subscribe(
       ({ target }) => {
+        console.log(target);
+
         const lastChar = target.value.split(' ');
 
         if (target.value.split('').length > 0) {
@@ -60,7 +62,7 @@ export class CiKeyboardDirective implements OnDestroy {
           this._keyboardRef.instance.lastChar.next([
             lastChar[lastChar.length - 1].split(''),
           ]);
-          
+
           this._keyboardRef.instance.listKeySuggestion.next(
             lastChar[lastChar.length - 1]
           );
