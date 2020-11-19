@@ -25,6 +25,7 @@ export interface WordList {
 export class CiKeyboardSuggestionComponent implements OnInit, OnChanges {
   @Input() listKeySuggestion;
   @Input() input;
+  @Input() historySuggest;
   wordDic = wordList;
   historyWord = JSON.parse(localStorage.getItem('history_word'));
   currentSuggestion: BehaviorSubject<WordList[]> = new BehaviorSubject<
@@ -34,9 +35,9 @@ export class CiKeyboardSuggestionComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {}
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
-    
-    if (changes.listKeySuggestion) {
+    // console.log(changes);
+
+    if (changes.listKeySuggestion && !changes.historySuggest) {
       from(changes.listKeySuggestion.currentValue)
         .pipe(
           distinctUntilChanged(),
@@ -65,12 +66,41 @@ export class CiKeyboardSuggestionComponent implements OnInit, OnChanges {
               this.currentSuggestion.getValue().concat(res)
             );
           },
+          (err) => { console.log(err);},
+          () => {}
+        );
+    } else {
+      from(changes.listKeySuggestion.currentValue)
+        .pipe(
+          distinctUntilChanged(),
+          debounceTime(600),
+          switchMap((query: string) => {
+            this.currentSuggestion.next([]);
+            if (query === null || query === '') {
+              return; 
+            } else {
+              return this.historySuggest
+                .filter((a: WordList) => {
+                  return a.text.toLowerCase().startsWith(
+                    // this.escapeUnicode(
+                    changes.listKeySuggestion.currentValue.toLowerCase()
+                    // )
+                  );
+                })
+                .slice(0, 15);
+            }
+          })
+        )
+        .subscribe(
+          (res: any) => {
+            this.currentSuggestion.next(
+              this.currentSuggestion.getValue().concat(res)
+            );
+          },
           (err) => {
             console.log(err);
           },
-          () => {
-            // console.log('complete');
-          }
+          () => {}
         );
     }
   }

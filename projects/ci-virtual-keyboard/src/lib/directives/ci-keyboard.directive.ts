@@ -1,9 +1,11 @@
 import {
+  AfterViewInit,
   Directive,
   ElementRef,
   EventEmitter,
   HostListener,
   Input,
+  OnChanges,
   OnDestroy,
   Optional,
   Output,
@@ -19,13 +21,14 @@ import { CiKeyboardService } from '../services/ci-keyboard.service';
 @Directive({
   selector: '[ciKeyboard]',
 })
-export class CiKeyboardDirective implements OnDestroy {
+export class CiKeyboardDirective
+  implements OnDestroy, AfterViewInit, OnChanges {
   private _keyboardRef: CiKeyboardRef<CiKeyboardComponent>;
   public currentEvent: Subscription;
-  @Input() ciKeyboard: string;
-
+  @Input() ciKeyboard: any;
+  @Input() ngModel;
   //   @Input() darkTheme: boolean;
-  @Input() historySuggest;
+  @Input() historySuggest: any;
   @Input() duration: number;
 
   @Input() isDebug: boolean;
@@ -43,35 +46,12 @@ export class CiKeyboardDirective implements OnDestroy {
     private _elementRef: ElementRef,
     private _keyboardService: CiKeyboardService,
     @Optional() @Self() private _control?: NgControl
-  ) {
-    this.currentEvent = fromEvent(element.nativeElement, 'input').subscribe(
-      ({ target }) => {
-        const lastChar = target.value.split(' ');
+  ) {}
 
-        if (target.value.split('').length > 0) {
-          this._keyboardRef.instance.listActiveChar.next(
-            target.value.split('')
-          );
-        } else {
-          this._keyboardRef.instance.listActiveChar.next([]);
-        }
-
-        if (lastChar[lastChar.length - 1].split('').length > 0) {
-          this._keyboardRef.instance.lastChar.next([
-            lastChar[lastChar.length - 1].split(''),
-          ]);
-          
-          this._keyboardRef.instance.listKeySuggestion.next(
-            lastChar[lastChar.length - 1]
-          );
-        } else {
-          this._keyboardRef.instance.lastChar.next([]);
-          this._keyboardRef.instance.listKeySuggestion.next([]);
-        }
-      }
-    );
+  ngAfterViewInit() {}
+  ngOnChanges() {
+    this._keyboardRef.instance.historySuggest.next(this.historySuggest);
   }
-
   ngOnDestroy() {
     if (this.currentEvent) {
       this.currentEvent.unsubscribe();
@@ -94,7 +74,6 @@ export class CiKeyboardDirective implements OnDestroy {
 
     // reference the input element
     this._keyboardRef.instance.setInputInstance(this._elementRef);
-
     // set control if given, cast to smth. non-abstract
     if (this._control) {
       this._keyboardRef.instance.attachControl(this._control.control);

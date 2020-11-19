@@ -10,7 +10,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { BehaviorSubject, fromEvent, Observable } from 'rxjs';
+import { BehaviorSubject, fromEvent, Observable, Subscription } from 'rxjs';
 import { layoutKeyboard } from '../../config/key.config';
 import { CiKeyboardRef } from '../../event/key-ref';
 import { KeyboardClassKey, KeyboardModifier } from '../../models/keyclass.enum';
@@ -76,15 +76,27 @@ export class CiKeyboardComponent implements OnInit {
     return this._isDebug.asObservable();
   }
   private _locale: string = 'vi';
-
+  elmSubcription: Subscription;
   // inject dependencies
   constructor(private _keyboardService: CiKeyboardService) {
     //   this.attachControl();
     
+ 
+  }
+
+  setInputInstance(inputInstance: ElementRef) {
+    this._inputInstance$.next(inputInstance);
+  }
+
+  attachControl(control: AbstractControl) {
+    this.control = control;
+  }
+
+  ngOnInit() {
     this.inputInstance.subscribe((res) => {
       if (res) {
-        fromEvent(res.nativeElement, 'input').subscribe(({ target }) => {
-
+       this.elmSubcription = fromEvent(res.nativeElement, 'input').subscribe(({ target }) => {
+          console.log(target);
           const lastChar = target.value.split(' ');
 
           if (target.value.split('').length > 0) {
@@ -104,22 +116,6 @@ export class CiKeyboardComponent implements OnInit {
         });
       }
     });
-  }
-
-  setInputInstance(inputInstance: ElementRef) {
-    this._inputInstance$.next(inputInstance);
-  }
-
-  attachControl(control: AbstractControl) {
-    this.control = control;
-  }
-
-  ngOnInit() {
-    // set a fallback using the locale
-    // if (!this.layout) {
-    //   this.locale = this._locale;
-    //   this.layout = this._keyboardService.getLayoutForLocale(this.locale);
-    // }
   }
 
   /**

@@ -23,7 +23,7 @@ $mat-keyboard-capslock-shine: #adff2f !default;
 
 .back-space {
   height: 50px !important;
-  width: 68% !important;
+  width: 80% !important;
   opacity: 0.7;
   border-radius: 2rem !important;
   background-position: center !important;
@@ -53,13 +53,12 @@ $mat-keyboard-capslock-shine: #adff2f !default;
 .ci-keyboard {
   &-key {
     min-width: 0;
-    width: 67px;
     color: #000000;
-    font-size: 2em;
     background-color: rgb(255, 255, 255, 0.9);
     border-radius: 1rem;
-    height: 67px;
-
+    font-size: 3em;
+    height: 75px;
+    width: 75px;
     &-active {
       background-color: mat-color($mat-grey, 300);
     }
