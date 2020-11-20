@@ -37,7 +37,7 @@ export class CiKeyboardSuggestionComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     // console.log(changes);
 
-    if (changes.listKeySuggestion && !changes.historySuggest) {
+    if (changes.listKeySuggestion) {
       from(changes.listKeySuggestion.currentValue)
         .pipe(
           distinctUntilChanged(),
@@ -47,45 +47,15 @@ export class CiKeyboardSuggestionComponent implements OnInit, OnChanges {
             if (query === null || query === '') {
               return;
             } else {
-              return this.wordDic
-                .filter((a: WordList) => {
-                  return a.text.toLowerCase().startsWith(
-                    // this.escapeUnicode(
-                    changes.listKeySuggestion.currentValue.toLowerCase()
-                    // )
-                  );
-                })
-                .slice(0, 15);
-            }
-            // }
-          })
-        )
-        .subscribe(
-          (res) => {
-            this.currentSuggestion.next(
-              this.currentSuggestion.getValue().concat(res)
-            );
-          },
-          (err) => { console.log(err);},
-          () => {}
-        );
-    } else {
-      from(changes.listKeySuggestion.currentValue)
-        .pipe(
-          distinctUntilChanged(),
-          debounceTime(600),
-          switchMap((query: string) => {
-            this.currentSuggestion.next([]);
-            if (query === null || query === '') {
-              return; 
-            } else {
               return this.historySuggest
                 .filter((a: WordList) => {
-                  return a.text.toLowerCase().startsWith(
-                    // this.escapeUnicode(
-                    changes.listKeySuggestion.currentValue.toLowerCase()
-                    // )
-                  );
+                  return this.escapeUnicode(a.text)
+                    .toLowerCase()
+                    .startsWith(
+                      this.escapeUnicode(
+                        changes.listKeySuggestion.currentValue.toLowerCase()
+                      )
+                    );
                 })
                 .slice(0, 15);
             }

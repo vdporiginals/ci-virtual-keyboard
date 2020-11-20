@@ -95,7 +95,7 @@ export const layoutKeyboard = [
     ['G', 'G'],
     ['H', 'H'],
     ['K', 'K'],
-    ['K', 'K'],
+    ['L', 'L'],
     ['/','/'],
     // [
     //   KeyboardClassKey.Enter,

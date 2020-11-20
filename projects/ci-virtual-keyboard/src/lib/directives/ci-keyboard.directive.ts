@@ -50,7 +50,9 @@ export class CiKeyboardDirective
 
   ngAfterViewInit() {}
   ngOnChanges() {
-    this._keyboardRef.instance.historySuggest.next(this.historySuggest);
+    if (this._keyboardRef) {
+      this._keyboardRef.instance.historySuggest.next(this.historySuggest);
+    }
   }
   ngOnDestroy() {
     if (this.currentEvent) {
