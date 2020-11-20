@@ -12,7 +12,7 @@ import {
   Self,
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { fromEvent, Subscription } from 'rxjs';
+import { from, fromEvent, Subject, Subscription } from 'rxjs';
 import { CiKeyboardComponent } from '../components/ci-keyboard/ci-keyboard.component';
 
 import { CiKeyboardRef } from '../event/key-ref';
@@ -32,6 +32,7 @@ export class CiKeyboardDirective
   @Input() duration: number;
 
   @Input() isDebug: boolean;
+  @Input() isClickDelete;
 
   @Output() enterClick: EventEmitter<void> = new EventEmitter<void>();
 
@@ -49,10 +50,34 @@ export class CiKeyboardDirective
   ) {}
 
   ngAfterViewInit() {}
-  ngOnChanges() {
+  ngOnChanges(changes) {
+    
     if (this._keyboardRef) {
-      this._keyboardRef.instance.historySuggest.next(this.historySuggest);
+      this._keyboardRef.instance.historySuggest.next(this.historySuggest); 
+    
     }
+
+    // if(changes.ngModel && this._keyboardRef){
+    //   this.currentEvent = from(changes.ngModel.currentValue).subscribe((target: any) => {
+    //     const lastChar = target.split(' ');
+
+    //     if (target.split('').length > 0) {
+    //       this._keyboardRef.instance.listActiveChar.next(target.split(''));
+    //     } else {
+    //       this._keyboardRef.instance.listActiveChar.next([]);
+    //     }
+
+    //     if (lastChar[lastChar.length - 1].split('').length > 0) {
+    //       this._keyboardRef.instance.lastChar.next([lastChar[lastChar.length - 1].split('')]);
+
+    //       this._keyboardRef.instance.listKeySuggestion.next(lastChar[lastChar.length - 1]);
+    //     } else {
+    //       this._keyboardRef.instance.lastChar.next([]);
+    //       this._keyboardRef.instance.listKeySuggestion.next([]);
+    //     }
+    //   });
+    // }
+   
   }
   ngOnDestroy() {
     if (this.currentEvent) {

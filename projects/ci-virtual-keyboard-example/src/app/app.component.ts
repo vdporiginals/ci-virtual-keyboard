@@ -65,6 +65,13 @@ export class AppComponent {
         this.attachModelValue = "";
         break;
     }
+
+    if(this.attachModelValue === ''){
+      this.attachModelValue = ' ';
+      console.log(this.attachModelValue === '');
+      
+    }
+    
   }
   showText() {
     // const dialogRef = this.dialog2.open(ShowTextComponent, {
